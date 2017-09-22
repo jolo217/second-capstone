@@ -1,9 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Fantasy Football Capstone</title>
+
+<link href="./css/main.css" rel="stylesheet" type="text/css" />
+
 </head>
 <body>
-<p>Hello World</p>
+<img class="logo" src="./images/image1.jpg" alt="football logo">
+<nav>
+	<ul>
+		<li><a href="#" class="nav-link">Home</a></li>
+		<li><a href="#" class="nav-link">About</a></li>
+		<li><a href="#" class="nav-link">Contact</a></li>
+		<li><a href="#" class="nav-link">Sign In</a></li>
+		<li><a href="#" class="nav-link">Register</a></li>
+	</ul>
+</nav>
+	<main>
+		<h1>Fantasy Football Blog</h1>
+		<div id="wrapper">
+			<div class="col-4">
+				<div id="js-content">
+					<label for="search-input"></label>
+					<input type="text" class="title-input" placeholder="Title">
+					<input type="text" class="first-name-input" placeholder="Author first name">
+					<input type="text" class="last-name-input" placeholder="Author last name">
+					<input type="text" class="content-input" placeholder="content">
+					<input type="text" class="image-input" placeholder="image">
+					<button type="submit" id="search-button" name="submit-button">Submit</button>
+					<p>Hello World</p>
+				</div>
+				<div id="js-posts">
+				</div>
+			</div>
+			<div class="col-4">
+			</div>
+			<div class="col-4">
+				<p>content</p>
+			</div>
+		</div>
+	</main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="./js/app.js"></script>
 </body>
 </html>

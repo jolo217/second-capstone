@@ -4,11 +4,14 @@
   "description": "fantasy blog",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.18.1",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
-    "express": "^4.15.4"
+    "express": "^4.15.4",
+    "mongoose": "^4.7.1"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "mocha": "^3.5.3"
   },
   "scripts": {

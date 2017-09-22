@@ -1,0 +1,61 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+nav {
+	border: 1px solid black;
+}
+
+body {
+	text-align: center;
+	margin: 0 auto;
+}
+
+li {
+	display: inline-block;
+	margin: 10px;
+}
+
+.logo {
+	height: 400px;
+	min-width: 100%;
+}
+
+.col-4 {
+	height: 350px;
+	display: inline-block;
+	width: 33.33333%;
+	vertical-align: top;
+	border: 1px solid black;
+	font-size: 15px;
+}
+
+#wrapper {
+	font-size: 0;
+}
+
+
+button {
+	display: block;
+}
+
+input {
+	display: block;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:visited {
+	color: purple;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active {
+	color: ;
+}
