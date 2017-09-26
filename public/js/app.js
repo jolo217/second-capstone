@@ -27,25 +27,25 @@ function getPosts(successCallback, errorCallback) {
   });
 }
 
-function deletePost(successCallback, errorCallback) {
+function deletePost(id, element) {
   $.ajax({
-    url: '/posts',
+    url: '/posts/' + id,
     type: 'delete',
-    success: successCallback,
-    error: errorCallback,
+    success: function (data) {
+       element.remove();
+    },
+    error: displayError,
   });
 }
-
-var resultTemplate = '<div class="container"><h4>Blogs></h4><div class="js-information">'
 	
 
 getPosts(resultData);
 
 
 function resultData(data) {
-	const outputHtml = data.map(function (item) {
-		return `<div class="blog-info">
-			<h1>${item.title}</h1>
+	const outputHtml = data.map(function (item) 
+{		return `<div class="blog-info" data-id="${item.id}">
+			<h3>${item.title}</h3>
 			<p>${item.content}</p>
 			<img src="${item.image}" alt="" />
 			<button>Delete Post</button>
@@ -67,18 +67,18 @@ function displayError() {
 
 $('#search-button').on('click', function(event){
 	event.preventDefault();
-	let titleInput =  $('.title-input').val();
-	let contentInput =  $('.content-input').val();
-	let author = {
+	const titleInput =  $('.title-input').val();
+	const contentInput =  $('.content-input').val();
+	const author = {
 		firstName: $('.first-name-input').val(),
 		lastName: $('.last-name-input').val()
 	};
-	let image = $('.image-input').val()
 	createPost(titleInput, contentInput, author, image, displaySuccess, displayError);
 });
 
 $('#js-posts').on('click', 'button', function() {
 	console.log("clicked");
-	event.preventDefault();
-	$(this).closest($('.blog-info')).remove();
+	const value = $(this).parent().data("id")
+	const element = $(this).parent();
+	deletePost(value, element);
 });

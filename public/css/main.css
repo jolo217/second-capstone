@@ -4,40 +4,189 @@
 }
 
 nav {
-	border: 1px solid black;
+	background-color: #333;
+	margin-top: 25px;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 40px;
 }
 
 body {
 	text-align: center;
 	margin: 0 auto;
+	background-color: #eee;
+	font-family: 'PT Sans', sans-serif;
 }
 
 li {
 	display: inline-block;
 	margin: 10px;
+	color: #fefefe;
+	text-transform: uppercase;
+	font-weight: 600;
 }
 
-.logo {
-	height: 400px;
-	min-width: 100%;
+img {
+	max-width: 100px;
+	max-height: 100px;
 }
 
-.col-4 {
-	height: 350px;
-	display: inline-block;
-	width: 33.33333%;
-	vertical-align: top;
-	border: 1px solid black;
-	font-size: 15px;
+h1 {
+	margin-bottom: 15px;
+}
+
+h2 {
+	margin-top: 35px;
+	margin-bottom: 35px;
+	padding-top: 0px;
+}
+
+h3 {
+
+}
+
+p {
+	padding-bottom: 15px;
+}
+
+.footer {
+  background-color: #333;
+  clear: both;
+  position: relative;
+  z-index: 10;
+  height: 5em;
+  margin-top: -3em;
+  top: 410px;
+}
+
+.footer p {
+	padding-top: 30px;
+	color: white;
+	font-family: sans-serif;
+}
+
+.box {
+	background-color: white;
+	margin-top: 20px;
+	padding: 20px;
+}
+
+.front-logo {
+	min-width: 25%;
+	max-height: 100%;
 }
 
 #wrapper {
 	font-size: 0;
+	margin: 25px 50px 25px 50px;
 }
 
+.blog-info {
+
+}
+
+.name-input, .email-input, .contact-text-area {
+	margin: 0 auto;
+	font-size: 16px;
+	outline: none;
+	-webkit-border-radius: 5px;
+}
+
+.name-input, .email-input {
+	display: inline-block;
+	margin-top: 100px;
+	height: 50px;
+	width: 300px;
+}
+
+.contact-text-area {
+	margin-top: 10px;
+	width: 600px;
+	height: 300px;
+	display: block;
+	margin: 0 auto;
+	margin-top: 20px;
+	font-family: sans-serif;
+}
+
+.contact-submit-btn {
+	margin: 0 auto;
+	margin-top: 20px;
+	height: 30px;
+	width: 100px;
+}
+
+.about-logo {
+	min-width: 1190px;
+	min-height: 595px;
+	margin-top: 40px;
+}
+
+.forms {
+	margin-bottom: 15px;
+}
+
+.username-input, .password-input, .login-btn {
+	margin: 0 auto;
+	height: 30px;
+	width: 200px;
+}
+
+.login-btn {
+	margin-bottom: 15px;
+}
+
+.login-box {
+	background: #fefefe;
+	padding: 30px 0px 30px 0px;
+	width: 600px;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+.form-inputs, .register-btn {
+	margin: 0 auto;
+}
+
+.form-inputs {
+	height: 30px;
+	width: 300px;
+}
+
+.register-btn {
+	width: 300px;
+	height: 30px;
+}
+
+.register-box {
+	background: #fefefe;
+	width: 600px;
+	margin: 0 auto;
+	padding-bottom: 50px;
+}
+
+.register-box h2 {
+	padding-top: 20px;
+}
+
+.about-box {
+	background: #fefefe;
+	width: 1190px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+.about-box h2 {
+	padding-top: 20px;
+}
+
+label {
+	margin: 5px;
+}
 
 button {
 	display: block;
+	color: #fefefe;
+	background-color: #333;
 }
 
 input {
@@ -46,10 +195,13 @@ input {
 
 a {
 	text-decoration: none;
+	background-color: transparent;
+	color: #fefefe;
 }
 
 a:visited {
-	color: purple;
+	text-decoration: none;
+	outline: none;
 }
 
 a:hover {
@@ -58,4 +210,9 @@ a:hover {
 
 a:active {
 	color: ;
+}
+
+::-webkit-input-placeholder { /* Chrome */
+  color: black;
+  padding: 5px;
 }
