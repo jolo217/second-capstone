@@ -37,7 +37,20 @@ function deletePost(id, element) {
     error: displayError,
   });
 }
-	
+
+function accountSignin(username, password, successCallback, errorCallback) {
+	$.ajax({
+		url: '/Login/',
+		type: 'get',
+		data: JSON.stringify({
+			username: username,
+			password: password
+		}),
+		contentType: "application/json", dataType: 'json',
+    	success: successCallback,
+    	error: errorCallback,
+	});
+}	
 
 getPosts(resultData);
 
@@ -81,4 +94,11 @@ $('#js-posts').on('click', 'button', function() {
 	const value = $(this).parent().data("id")
 	const element = $(this).parent();
 	deletePost(value, element);
+});
+
+$('.login-btn').on('click', function(event) {
+	event.preventDefault();
+	const usernameInput = $('.username-input');
+	const passwordInput = $('password-input');
+	accountSignin(usernameInput, passwordInput);
 });
