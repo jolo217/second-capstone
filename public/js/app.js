@@ -40,8 +40,8 @@ function deletePost(id, element) {
 
 function accountSignin(username, password, successCallback, errorCallback) {
 	$.ajax({
-		url: '/Login/',
-		type: 'get',
+		url: '/login/',
+		type: 'post',
 		data: JSON.stringify({
 			username: username,
 			password: password
@@ -51,6 +51,27 @@ function accountSignin(username, password, successCallback, errorCallback) {
     	error: errorCallback,
 	});
 }	
+
+function accountCreate(firstName, lastName, username, password, email, password, confirmPassword, successCallback, errorCallback) {
+	$.ajax({
+		url: '/api/register/',
+		type: 'post',
+		data: JSON.stringify({
+			firstName: firstName,
+			lastName: lastName,
+			username: username,
+			email: email,
+			password: password,
+			confirmPassword: confirmPassword
+		}),
+		contentType: "application/json", dataType: 'json',
+    	success: function (data) {
+    		alert("user created successfully")
+    	},
+    	error: errorCallback,
+	});
+}	
+
 
 getPosts(resultData);
 
@@ -74,7 +95,7 @@ function displaySuccess(data) {
 }
 
 function displayError() {
-	$('#wrapper').show().text('something went wrong');
+	$('.container').show().text('something went wrong');
 }
 
 
@@ -86,6 +107,7 @@ $('#search-button').on('click', function(event){
 		firstName: $('.first-name-input').val(),
 		lastName: $('.last-name-input').val()
 	};
+	const image = $('.image-input').val();
 	createPost(titleInput, contentInput, author, image, displaySuccess, displayError);
 });
 
@@ -98,7 +120,39 @@ $('#js-posts').on('click', 'button', function() {
 
 $('.login-btn').on('click', function(event) {
 	event.preventDefault();
-	const usernameInput = $('.username-input');
-	const passwordInput = $('password-input');
-	accountSignin(usernameInput, passwordInput);
+	console.log("clicked");
+	const usernameInput = $('.username-input').val();
+	const passwordInput = $('password-input').val();
+	accountSignin(usernameInput, passwordInput, displaySuccess, displayError);
+});
+
+$('.register-btn').on('click', function(event) {
+	event.preventDefault();
+	console.log("clicked");
+	//const $firstNameInput = $('r-first-name-input');
+	//const $lastNameInput = $('r-last-name-input');
+	//const $username = $('r-username-input');
+	const $emailInput = $('r-email-input');
+	const $password = $('r-password-input');
+	//const $confirmPassword = $('r-password-input2');
+	const values = {
+		//firstName: $firstname.val(),
+		//lastName: $lastName.val(),
+		//username: $username.val(),
+		email: $email.val(),
+		password: $password.val(),
+		//confirmPassword: $confirmPassword.val()
+	};
+	console.log(values);
+	/*.ajax({
+		type: 'POST',
+		url: '/api/register',
+		dataType: 'json',
+		data: JSON.stringify(values),
+		success: function (data) {
+    		alert("user created successfully")
+    	},
+    	error: function() {
+    		alert("error");
+	});*/
 });

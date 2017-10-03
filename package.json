@@ -4,11 +4,18 @@
   "description": "fantasy blog",
   "main": "server.js",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.1",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "dotenv": "^4.0.0",
     "express": "^4.15.4",
-    "mongoose": "^4.7.1"
+    "jsonwebtoken": "^8.0.1",
+    "mongoose": "^4.7.1",
+    "passport": "^0.4.0",
+    "passport-http": "^0.3.0",
+    "passport-jwt": "^3.0.0"
   },
   "devDependencies": {
     "faker": "^4.1.0",

@@ -2,12 +2,90 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); 
+const passport = require('passport');
+//const morgan = require('morgan');
+const User = require('./models/user')
+const jwt = require('jsonwebtoken');
 
 const {BlogPost} = require('./models/posts');
-const {DATABASE_URL, PORT} = require('./config');
+const {DATABASE_URL, PORT, JWT_SECRET} = require('./config');
 
+app.use(bodyParser.urlencoded({ extended: false}));
 app.use(express.static('public'));
 app.use(bodyParser.json());
+
+//app.use(morgan('dev'));
+
+// Initialize passport for use
+app.use(passport.initialize());
+
+// Create API group routes
+var apiRoutes = express.Router();
+
+// Bring in defined Passport Strategy
+require('./users/passport')(passport);
+
+// Register new users
+apiRoutes.post('/register', function(req, res) {
+  if(!req.body.email || !req.body.password) {
+    res.json({ success: false, message: 'Please enter email and password.' });
+  } else {
+    var newUser = new User({
+      email: req.body.email,
+      password: req.body.password
+    });
+
+    // Attempt to save the user
+    newUser.save(function(err) {
+      if (err) {
+        return res.json({ success: false, message: 'That email address already exists.'});
+      }
+      res.json({ success: true, message: 'Successfully created new user.' });
+    });
+  }
+});
+
+// Authenticate the user and get a JSON Web Token to include in the header of future requests.
+apiRoutes.post('/authenticate', function(req, res) {
+  User.findOne({
+    email: req.body.email
+  }, function(err, user) {
+    if (err) throw err;
+
+    if (!user) {
+      res.send({ success: false, message: 'Authentication failed. User not found.' });
+    } else {
+      // Check if password matches
+      user.comparePassword(req.body.password, function(err, isMatch) {
+        if (isMatch && !err) {
+          // Create token if the password matched and no error was thrown
+          console.log(user);
+          var token = jwt.sign({email: user.email}, JWT_SECRET, {
+            expiresIn: 10080 // in seconds
+          });
+          res.json({ success: true, token: 'BEARER ' + token });
+        } else {
+          res.send({ success: false, message: 'Authentication failed. Passwords did not match.' });
+        }
+      });
+    }
+  });
+});
+
+// Protect dashboard route with JWT
+apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), function(req, res) {
+  res.send('It worked! User id is: ' + req.user._id + '.');
+});
+
+// Set url for API group routes
+app.use('/api', apiRoutes);
+
+// Bring in passport strategy we just defined
+require ('./users/passport')(passport);
+
+app.use('*', (req, res) => {
+    return res.status(404).json({message: 'Not Found'});
+});
 
 app.get('/posts', (req, res) => {
 	BlogPost
@@ -32,7 +110,7 @@ app.get('/posts/:id', (req, res) => {
 });
 
 app.post('/posts', (req, res) => {
-  const requiredFields = ['title', 'content', 'author']
+  const requiredFields = ['title', 'content', 'author', 'created', 'image']
   console.log(req.body);
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -81,7 +159,7 @@ app.put('/posts/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['title', 'content', 'author'];
+  const updateableFields = ['title', 'content', 'author', 'image'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];

@@ -43,6 +43,17 @@ p {
 	padding-bottom: 15px;
 }
 
+.title-input, .first-name-input, .last-name-input, .content-input, .image-input {
+	height: 35px;
+	width: 370px;
+}
+
+#search-button {
+	height: 35px;
+	width: 370px;
+	margin-top: 10px;
+}
+
 .footer {
   background-color: #333;
   clear: both;
@@ -142,9 +153,10 @@ p {
 	margin: 0 auto;
 }
 
-.form-inputs {
+.r-first-name-input, .r-last-name-input, .r-username-input, .r-email-input, .r-password-input, .r-password-input2 {
 	height: 30px;
 	width: 300px;
+	margin: 0 auto;
 }
 
 .register-btn {
