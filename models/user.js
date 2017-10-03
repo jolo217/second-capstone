@@ -13,6 +13,23 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  confirmPassword: {
+	type: String,
+  	required: true
+  },
+  firstName: {
+  	type: String,
+  	required: true
+  },
+  lastName: {
+  	type: String,
+  	required: true
+  },
+  username: {
+  	type: String,
+  	required: true,
+  	unique: true
+  },
   role: {
     type: String,
     enum: ['Client', 'Manager', 'Admin'],

@@ -27,18 +27,22 @@ require('./users/passport')(passport);
 
 // Register new users
 apiRoutes.post('/register', function(req, res) {
-  if(!req.body.email || !req.body.password) {
-    res.json({ success: false, message: 'Please enter email and password.' });
+  if(!req.body.email || !req.body.password || !req.body.confirmPassword || !req.body.firstName || !req.body.lastName || !req.body.username) {
+    res.status(400).json({ success: false, message: 'Please enter in all the fields.' });
   } else {
     var newUser = new User({
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      confirmPassword: req.body.confirmPassword,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username
     });
 
     // Attempt to save the user
     newUser.save(function(err) {
       if (err) {
-        return res.json({ success: false, message: 'That email address already exists.'});
+        return res.status(400).json({ success: false, message: 'That email address already exists.'});
       }
       res.json({ success: true, message: 'Successfully created new user.' });
     });

@@ -40,7 +40,7 @@ function deletePost(id, element) {
 
 function accountSignin(username, password, successCallback, errorCallback) {
 	$.ajax({
-		url: '/login/',
+		url: '/api/authenticate',
 		type: 'post',
 		data: JSON.stringify({
 			username: username,
@@ -51,27 +51,6 @@ function accountSignin(username, password, successCallback, errorCallback) {
     	error: errorCallback,
 	});
 }	
-
-function accountCreate(firstName, lastName, username, password, email, password, confirmPassword, successCallback, errorCallback) {
-	$.ajax({
-		url: '/api/register/',
-		type: 'post',
-		data: JSON.stringify({
-			firstName: firstName,
-			lastName: lastName,
-			username: username,
-			email: email,
-			password: password,
-			confirmPassword: confirmPassword
-		}),
-		contentType: "application/json", dataType: 'json',
-    	success: function (data) {
-    		alert("user created successfully")
-    	},
-    	error: errorCallback,
-	});
-}	
-
 
 getPosts(resultData);
 
@@ -126,33 +105,35 @@ $('.login-btn').on('click', function(event) {
 	accountSignin(usernameInput, passwordInput, displaySuccess, displayError);
 });
 
-$('.register-btn').on('click', function(event) {
+$('#register-form').on('submit', function(event) {
 	event.preventDefault();
 	console.log("clicked");
-	//const $firstNameInput = $('r-first-name-input');
-	//const $lastNameInput = $('r-last-name-input');
-	//const $username = $('r-username-input');
-	const $emailInput = $('r-email-input');
-	const $password = $('r-password-input');
-	//const $confirmPassword = $('r-password-input2');
+	const $firstNameInput = $('.r-first-name-input');
+	const $lastNameInput = $('.r-last-name-input');
+	const $username = $('.r-username-input');
+	const $emailInput = $('.r-email-input');
+	const $password = $('.r-password-input');
+	const $confirmPassword = $('.r-password-input2');
 	const values = {
-		//firstName: $firstname.val(),
-		//lastName: $lastName.val(),
-		//username: $username.val(),
-		email: $email.val(),
+		firstName: $firstNameInput.val(),
+		lastName: $lastNameInput.val(),
+		username: $username.val(),
+		email: $emailInput.val(),
 		password: $password.val(),
-		//confirmPassword: $confirmPassword.val()
+		confirmPassword: $confirmPassword.val()
 	};
 	console.log(values);
-	/*.ajax({
+	$.ajax({
 		type: 'POST',
 		url: '/api/register',
 		dataType: 'json',
-		data: JSON.stringify(values),
+		data: values,
 		success: function (data) {
-    		alert("user created successfully")
+    		$('#register-form').empty().html("<h2>User created</h2>");
     	},
-    	error: function() {
-    		alert("error");
-	});*/
+    	error: function(data) {
+    		console.log(data.responseJSON.message);
+    		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
+    	}
+	});
 });
