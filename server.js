@@ -42,7 +42,7 @@ apiRoutes.post('/register', function(req, res) {
     // Attempt to save the user
     newUser.save(function(err) {
       if (err) {
-        return res.status(400).json({ success: false, message: 'That email address already exists.'});
+        return res.status(400).json({ success: false, message: 'That username or email address already exists.'});
       }
       res.json({ success: true, message: 'Successfully created new user.' });
     });
@@ -52,24 +52,24 @@ apiRoutes.post('/register', function(req, res) {
 // Authenticate the user and get a JSON Web Token to include in the header of future requests.
 apiRoutes.post('/authenticate', function(req, res) {
   User.findOne({
-    email: req.body.email
+    username: req.body.username
   }, function(err, user) {
     if (err) throw err;
 
     if (!user) {
-      res.send({ success: false, message: 'Authentication failed. User not found.' });
+      res.status(400).json({ success: false, message: 'Authentication failed. User not found.' });
     } else {
       // Check if password matches
       user.comparePassword(req.body.password, function(err, isMatch) {
         if (isMatch && !err) {
           // Create token if the password matched and no error was thrown
           console.log(user);
-          var token = jwt.sign({email: user.email}, JWT_SECRET, {
+          var token = jwt.sign({username: user.username}, JWT_SECRET, {
             expiresIn: 10080 // in seconds
           });
           res.json({ success: true, token: 'BEARER ' + token });
         } else {
-          res.send({ success: false, message: 'Authentication failed. Passwords did not match.' });
+          res.status(400).json({ success: false, message: 'Authentication failed. Passwords did not match.' });
         }
       });
     }
@@ -86,10 +86,6 @@ app.use('/api', apiRoutes);
 
 // Bring in passport strategy we just defined
 require ('./users/passport')(passport);
-
-app.use('*', (req, res) => {
-    return res.status(404).json({message: 'Not Found'});
-});
 
 app.get('/posts', (req, res) => {
 	BlogPost

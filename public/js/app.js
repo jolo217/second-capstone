@@ -47,24 +47,32 @@ function accountSignin(username, password, successCallback, errorCallback) {
 			password: password
 		}),
 		contentType: "application/json", dataType: 'json',
-    	success: successCallback,
-    	error: errorCallback,
+    	success: function (data) {
+    		alert('Signed in');
+    		console.log(data);
+    	},
+    	error: function (data) {
+    		alert('error');
+    	}
 	});
-}	
+}
 
 getPosts(resultData);
 
 
 function resultData(data) {
 	const outputHtml = data.map(function (item) 
-{		return `<div class="blog-info" data-id="${item.id}">
+{		return `<div class="blog-info box" data-id="${item.id}">
 			<h3>${item.title}</h3>
+			<p>${item.author}</p>
 			<p>${item.content}</p>
 			<img src="${item.image}" alt="" />
-			<button>Delete Post</button>
-			<hr />
+			<div class="button-wrapper">
+				<button>Delete Post</button>
+			</div>
 		</div>`;
 	});
+	console.log(outputHtml);
 	$('#js-posts').html(outputHtml);
 }
 
@@ -98,16 +106,15 @@ $('#js-posts').on('click', 'button', function() {
 });
 
 $('.login-btn').on('click', function(event) {
-	event.preventDefault();
-	console.log("clicked");
+	event.preventDefault();;
 	const usernameInput = $('.username-input').val();
-	const passwordInput = $('password-input').val();
+	const passwordInput = $('.password-input').val();
 	accountSignin(usernameInput, passwordInput, displaySuccess, displayError);
 });
 
 $('#register-form').on('submit', function(event) {
 	event.preventDefault();
-	console.log("clicked");
+	const token = $(this)
 	const $firstNameInput = $('.r-first-name-input');
 	const $lastNameInput = $('.r-last-name-input');
 	const $username = $('.r-username-input');
@@ -122,7 +129,6 @@ $('#register-form').on('submit', function(event) {
 		password: $password.val(),
 		confirmPassword: $confirmPassword.val()
 	};
-	console.log(values);
 	$.ajax({
 		type: 'POST',
 		url: '/api/register',
@@ -132,7 +138,6 @@ $('#register-form').on('submit', function(event) {
     		$('#register-form').empty().html("<h2>User created</h2>");
     	},
     	error: function(data) {
-    		console.log(data.responseJSON.message);
     		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
     	}
 	});

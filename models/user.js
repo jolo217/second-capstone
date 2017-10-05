@@ -14,7 +14,7 @@ var UserSchema = new mongoose.Schema({
     required: true
   },
   confirmPassword: {
-	type: String,
+	  type: String,
   	required: true
   },
   firstName: {

@@ -44,6 +44,7 @@ p {
 }
 
 .title-input, .first-name-input, .last-name-input, .content-input, .image-input {
+	margin: 0 auto;
 	height: 35px;
 	width: 370px;
 }
@@ -52,6 +53,7 @@ p {
 	height: 35px;
 	width: 370px;
 	margin-top: 10px;
+	margin: 0 auto;
 }
 
 .footer {
@@ -76,6 +78,21 @@ p {
 	padding: 20px;
 }
 
+.box img {
+	max-width: 100%;
+}
+
+.box button {
+	width: 200px;
+	height: 30px;
+	margin-top: 30px;
+	display: inline-block;
+}
+
+.box-wrapper {
+	text-align: center;
+}
+
 .front-logo {
 	min-width: 25%;
 	max-height: 100%;
@@ -84,10 +101,6 @@ p {
 #wrapper {
 	font-size: 0;
 	margin: 25px 50px 25px 50px;
-}
-
-.blog-info {
-
 }
 
 .name-input, .email-input, .contact-text-area {
