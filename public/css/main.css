@@ -30,9 +30,7 @@ h1 {
 }
 
 h2 {
-	margin-top: 35px;
-	margin-bottom: 35px;
-	padding-top: 0px;
+	margin-bottom: 30px;
 }
 
 h3 {
@@ -41,6 +39,30 @@ h3 {
 
 p {
 	padding-bottom: 15px;
+}
+
+#js-content h2 {
+	margin-bottom: 0px;
+	background-color: #363c4b;
+	color: #ffffff;
+	border-bottom: 5px solid #535f7d;
+	text-align: center;
+	width: auto;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+
+.box-blah h2 {
+	margin-bottom: 0px;
+	background-color: #363c4b;
+	color: #ffffff;
+	border-bottom: 5px solid #535f7d;
+	text-align: center;
+	width: auto;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
 }
 
 .title-input, .first-name-input, .last-name-input, .content-input, .image-input {
@@ -54,6 +76,22 @@ p {
 	width: 370px;
 	margin-top: 10px;
 	margin: 0 auto;
+}
+
+.blog-info h3 {
+	padding-top: 25px;
+	text-align: left;
+	margin-left: 20px;
+	font-size: 150%;
+}
+
+.blog-info p {
+	margin-left: 20px;
+}
+
+.p-author {
+	font-size: small;
+	text-align: left;
 }
 
 .footer {
@@ -74,8 +112,6 @@ p {
 
 .box {
 	background-color: white;
-	margin-top: 20px;
-	padding: 20px;
 }
 
 .box img {

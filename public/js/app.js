@@ -22,6 +22,9 @@ function getPosts(successCallback, errorCallback) {
   $.ajax({
     url: '/posts',
     type: 'get',
+    headers: {
+    	'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
+    },
     success: successCallback,
     error: errorCallback,
   });
@@ -44,12 +47,13 @@ function accountSignin(username, password, successCallback, errorCallback) {
 		type: 'post',
 		data: JSON.stringify({
 			username: username,
-			password: password
+			password: password,
+			grant_type: 'password'
 		}),
 		contentType: "application/json", dataType: 'json',
-    	success: function (data) {
-    		alert('Signed in');
-    		console.log(data);
+    	success: function (response) {
+    		sessionStorage.setItem('accessToken', response.token);
+    		window.location.replace("http://localhost:8080/index.html");
     	},
     	error: function (data) {
     		alert('error');
@@ -64,7 +68,7 @@ function resultData(data) {
 	const outputHtml = data.map(function (item) 
 {		return `<div class="blog-info box" data-id="${item.id}">
 			<h3>${item.title}</h3>
-			<p>${item.author}</p>
+			<p class="p-author">Author: ${item.author}</p>
 			<p>${item.content}</p>
 			<img src="${item.image}" alt="" />
 			<div class="button-wrapper">
@@ -72,7 +76,6 @@ function resultData(data) {
 			</div>
 		</div>`;
 	});
-	console.log(outputHtml);
 	$('#js-posts').html(outputHtml);
 }
 
@@ -136,6 +139,7 @@ $('#register-form').on('submit', function(event) {
 		data: values,
 		success: function (data) {
     		$('#register-form').empty().html("<h2>User created</h2>");
+    		console.log(data);
     	},
     	error: function(data) {
     		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
