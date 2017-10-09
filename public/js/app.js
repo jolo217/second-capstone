@@ -52,6 +52,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
 		}),
 		contentType: "application/json", dataType: 'json',
     	success: function (response) {
+    		sessionStorage.removeItem('accessToken');
     		sessionStorage.setItem('accessToken', response.token);
     		window.location.replace("http://localhost:8080/index.html");
     	},
@@ -102,9 +103,8 @@ $('#search-button').on('click', function(event){
 });
 
 $('#js-posts').on('click', 'button', function() {
-	console.log("clicked");
-	const value = $(this).parent().data("id")
-	const element = $(this).parent();
+	const value = $(this).parent().parent().data("id")
+	const element = $(this).parent().parent();
 	deletePost(value, element);
 });
 
@@ -145,4 +145,30 @@ $('#register-form').on('submit', function(event) {
     		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
     	}
 	});
+});
+
+function parseJwt (token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace('-', '+').replace('_', '/');
+            return JSON.parse(window.atob(base64));
+        };
+
+$('.show-user').on('click', function(){
+	sessionStorage.removeItem('accessToken');
+	location.href=location.href;
+});
+
+$(function(){
+	$('.blog-create-box').hide();
+	$('.show-user').hide();
+	const token = sessionStorage.getItem('accessToken');
+	if (token) {
+		$('.hide-user').hide();
+		$('.show-user').show();
+		const payloadData = parseJwt(token);
+		const role = payloadData.role;
+		if (token && role === 'Admin') {
+			$('.blog-create-box').show();
+		}
+	};
 });
