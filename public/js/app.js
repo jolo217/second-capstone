@@ -1,3 +1,4 @@
+// API functions
 function createPost(title, content, author, image, successCallback, errorCallback) {
   $.ajax({
     url: '/posts',
@@ -12,7 +13,7 @@ function createPost(title, content, author, image, successCallback, errorCallbac
 		image: image,
 		created: Date.now()
 	}),
-	contentType: "application/json", dataType: 'json',
+	contentType: 'application/json', dataType: 'json',
     success: successCallback,
     error: errorCallback,
   });
@@ -62,20 +63,44 @@ function accountSignin(username, password, successCallback, errorCallback) {
 	});
 }
 
+function deleteComment(id, element) {
+	 $.ajax({
+    url: '/comments/' + id,
+    type: 'delete',
+    success: function (data) {
+       element.remove();
+    },
+    error: displayError,
+  });
+}
+
+// Retrieve data and display
 getPosts(resultData);
 
 
 function resultData(data) {
-	const outputHtml = data.map(function (item) 
-{		return `<div class="blog-info box" data-id="${item.id}">
+	const outputHtml = data.map(function (item) {
+			const comments = item.postComments.map(function(comment){
+				return `<div class="comment-box" data-id="${comment._id}"><p><strong>${comment.username}:</strong> ${comment.content}</p>
+				<span class="delete-comment-button">X</span></div>`;
+			});
+			const post = `<div class="blog-info box" data-id="${item._id}">
 			<h3>${item.title}</h3>
-			<p class="p-author">Author: ${item.author}</p>
+			<p class="p-author">Author: ${item.author.firstName} ${item.author.lastName}</p>
+			<img src="${item.image}" class="blog-image" alt="" />
 			<p>${item.content}</p>
-			<img src="${item.image}" alt="" />
-			<div class="button-wrapper">
-				<button>Delete Post</button>
+			<div class="comment-section">
+				<textarea placeholder="Comment" class="comment-text-area" required="" data-id="${item._id}"></textarea>
+				<button type="submit" class="post-button">Post</button>
+				<h5>Comments</h5>
+				${comments.join('')}
 			</div>
-		</div>`;
+			<div class="button-wrapper">
+				<button class="delete-post">Delete Post</button>	
+			</div>
+		</div>
+		<hr>`;
+		return post;
 	});
 	$('#js-posts').html(outputHtml);
 }
@@ -89,7 +114,7 @@ function displayError() {
 	$('.container').show().text('something went wrong');
 }
 
-
+// Event Handlers
 $('#search-button').on('click', function(event){
 	event.preventDefault();
 	const titleInput =  $('.title-input').val();
@@ -102,9 +127,11 @@ $('#search-button').on('click', function(event){
 	createPost(titleInput, contentInput, author, image, displaySuccess, displayError);
 });
 
-$('#js-posts').on('click', 'button', function() {
+$('#js-posts').on('click', '.delete-post', function() {
 	const value = $(this).parent().parent().data("id")
 	const element = $(this).parent().parent();
+	console.log(value);
+	console.log(element);
 	deletePost(value, element);
 });
 
@@ -117,7 +144,7 @@ $('.login-btn').on('click', function(event) {
 
 $('#register-form').on('submit', function(event) {
 	event.preventDefault();
-	const token = $(this)
+	const token = $(this);
 	const $firstNameInput = $('.r-first-name-input');
 	const $lastNameInput = $('.r-last-name-input');
 	const $username = $('.r-username-input');
@@ -139,7 +166,6 @@ $('#register-form').on('submit', function(event) {
 		data: values,
 		success: function (data) {
     		$('#register-form').empty().html("<h2>User created</h2>");
-    		console.log(data);
     	},
     	error: function(data) {
     		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
@@ -158,17 +184,63 @@ $('.show-user').on('click', function(){
 	location.href=location.href;
 });
 
+$('#js-posts').on('click', '.post-button', function() {
+	const comment = $(this).prev().val();
+	const postId = $(this).prev().data("id");
+	const whereToRender = $(this).parent();
+	const token = sessionStorage.getItem('accessToken');
+	const payloadData = parseJwt(token);
+	const username = payloadData.username;
+	$.ajax({
+		type: 'POST',
+		url: '/comments',
+		dataType: 'json',
+		data: {
+			content: comment,
+			postId: postId,
+			username: username
+		},
+		success: function (data) {
+			const display = `<div class="comment-box" data-id="${data._id}"><p><strong>${username}:</strong> ${comment}</p>
+			<span class="delete-comment-button">X</span></div>`;		
+			whereToRender.append(display)
+			$('.comment-text-area').val('');
+		},
+		error: function(data) {
+			alert("error");
+		}
+	});
+});
+
+$('#js-posts').on('click', '.delete-comment-button', function() {
+	console.log("clicked");
+	const value = $(this).parent().data("id");
+	const element = $(this).parent();
+	deleteComment(value, element);
+});
+
+// On load function
 $(function(){
 	$('.blog-create-box').hide();
 	$('.show-user').hide();
+	$('.button-wrapper').hide();
+	$('.comment-text-area').hide();
+	$('.post-button').hide();
+	$('.delete-comment-button').hide();
 	const token = sessionStorage.getItem('accessToken');
 	if (token) {
 		$('.hide-user').hide();
 		$('.show-user').show();
+		$('.comment-text-area').show();
+		$('.post-button').show();
 		const payloadData = parseJwt(token);
 		const role = payloadData.role;
 		if (token && role === 'Admin') {
 			$('.blog-create-box').show();
+			$('.button-wrapper').show();
+			$('.comment-text-area').show();
+			$('.post-button').show();
+			$('.delete-comment-button').show();
 		}
 	};
 });

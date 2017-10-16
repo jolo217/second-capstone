@@ -3,18 +3,16 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); 
 const passport = require('passport');
-//const morgan = require('morgan');
 const User = require('./models/user')
 const jwt = require('jsonwebtoken');
 
 const {BlogPost} = require('./models/posts');
 const {DATABASE_URL, PORT, JWT_SECRET} = require('./config');
+const {Comments} = require('./models/comments');
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(express.static('public'));
 app.use(bodyParser.json());
-
-//app.use(morgan('dev'));
 
 // Initialize passport for use
 app.use(passport.initialize());
@@ -87,15 +85,20 @@ app.use('/api', apiRoutes);
 require ('./users/passport')(passport);
 
 app.get('/posts', (req, res) => {
-	BlogPost
-		.find()
-		.then(posts => {
-			res.json(posts.map(post => post.apiRepr()));
-		})
-		.catch(err => {
-			console.error(err);
-			res.status(500).json({error: 'something went wrong'});
-		});
+  BlogPost.aggregate([{
+    $lookup: {
+        from: "comments", // collection name in db
+        localField: "_id",
+        foreignField: "postId",
+        as: "postComments"
+    }
+}]).then(posts => {
+      res.json(posts);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'something went wrong'});
+    });
 	});
 
 app.get('/posts/:id', (req, res) => {
@@ -110,7 +113,6 @@ app.get('/posts/:id', (req, res) => {
 
 app.post('/posts', (req, res) => {
   const requiredFields = ['title', 'content', 'author', 'created', 'image']
-  console.log(req.body);
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -126,14 +128,14 @@ app.post('/posts', (req, res) => {
       content: req.body.content,
       author: req.body.author,
       created: req.body.created,
-      image: req.body.image
+      image: req.body.image,
+      comments: req.body.comments
     })
     .then(blogPost => res.status(201).json(blogPost.apiRepr()))
     .catch(err => {
         console.error(err);
         res.status(500).json({error: 'Something went wrong'});
     });
-
 });
 
 
@@ -172,7 +174,7 @@ app.put('/posts/:id', (req, res) => {
 });
 
 
-app.delete('/:id', (req, res) => {
+app.delete('/posts/:id', (req, res) => {
   BlogPosts
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -181,6 +183,38 @@ app.delete('/:id', (req, res) => {
     });
 });
 
+app.post('/comments', (req, res) => {
+   const requiredFields = ['content', 'postId']
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+
+  Comments
+    .create({
+      content: req.body.content,
+      postId: mongoose.Types.ObjectId(req.body.postId),
+      username: req.body.username
+    })
+    .then(comment => res.status(201).json(comment)
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({error: 'Something went wrong'});
+    }));
+});
+
+app.delete('/comments/:id', (req, res) => {
+  Comments
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      console.log(`Deleted comments post with id \`${req.params.id}\``);
+      res.status(204).end();
+    });
+});
 
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});

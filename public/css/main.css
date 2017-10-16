@@ -33,8 +33,27 @@ h2 {
 	margin-bottom: 30px;
 }
 
+h5 {
+	padding-top: 25px;
+	text-align: left;
+	margin-left: 20px;
+	font-size: 150%;
+	margin-bottom: 20px;
+}
+
+h6 {
+	font-size: 120%;
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+
 p {
 	padding-bottom: 15px;
+}
+
+.comment-section p {
+	text-align: left;
+	margin-bottom: 5px;
 }
 
 #js-content h2 {
@@ -47,6 +66,23 @@ p {
 	padding-top: 10px;
 	padding-left: 10px;
 	padding-bottom: 10px;
+}
+
+.blog-image {
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 15px;
+	max-width: 100px;
+	max-height: 100px;
+	clear: right;
+	display: inline-block;
+}
+
+.comment-text-area {
+	display: block;
+	margin: 0 auto;
+	width: 350px;
+	height: 75px;
 }
 
 .box-blah h2 {
@@ -76,6 +112,7 @@ p {
 
 .blog-info {
 	margin-bottom: 30px;
+	margin-right: 15px;
 }
 
 .blog-info h3 {
@@ -242,6 +279,46 @@ p {
 .matchups-logo {
 	height: 550px;
 	width: 390px;
+}
+
+.starts-image {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.starts-box {
+	display: block;
+}
+
+.starts-box hr {
+	margin: 0;
+}
+
+.delete-comment-button {
+    background: #fefefe;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border: 1px solid black;
+    display: inline-block;
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: red;
+    font-size: 14px;
+}
+.delete-comment-button:hover {
+    cursor: pointer;
+}
+
+.comment-box {
+	position: relative;
+}
+
+#search-button {
+	margin-bottom: 15px;
 }
 
 label {

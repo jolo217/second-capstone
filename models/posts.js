@@ -25,8 +25,8 @@ dataSchema.methods.apiRepr = function() {
     content: this.content,
     title: this.title,
     created: this.created,
-    comments: this.comments,
-    image: this.image
+    image: this.image,
+    postComments: this.postComments
   };
 }
 
