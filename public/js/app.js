@@ -55,7 +55,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
     	success: function (response) {
     		sessionStorage.removeItem('accessToken');
     		sessionStorage.setItem('accessToken', response.token);
-    		window.location.replace("http://localhost:8080/index.html");
+    		window.location.replace('http://localhost:8080/index.html');
     	},
     	error: function (data) {
     		alert('error');
@@ -107,7 +107,7 @@ function resultData(data) {
 
 
 function displaySuccess(data) {
-	console.log("successfully posted data");
+	console.log('successfully posted data');
 }
 
 function displayError() {
@@ -165,7 +165,7 @@ $('#register-form').on('submit', function(event) {
 		dataType: 'json',
 		data: values,
 		success: function (data) {
-    		$('#register-form').empty().html("<h2>User created</h2>");
+    		$('#register-form').empty().html('<h2>User created</h2>');
     	},
     	error: function(data) {
     		$('#register-form').prepend(`<p>${data.responseJSON.message}</p>`);
@@ -186,7 +186,7 @@ $('.show-user').on('click', function(){
 
 $('#js-posts').on('click', '.post-button', function() {
 	const comment = $(this).prev().val();
-	const postId = $(this).prev().data("id");
+	const postId = $(this).prev().data('id');
 	const whereToRender = $(this).parent();
 	const token = sessionStorage.getItem('accessToken');
 	const payloadData = parseJwt(token);
@@ -207,13 +207,12 @@ $('#js-posts').on('click', '.post-button', function() {
 			$('.comment-text-area').val('');
 		},
 		error: function(data) {
-			alert("error");
+			alert('error');
 		}
 	});
 });
 
 $('#js-posts').on('click', '.delete-comment-button', function() {
-	console.log("clicked");
 	const value = $(this).parent().data("id");
 	const element = $(this).parent();
 	deleteComment(value, element);

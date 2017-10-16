@@ -87,10 +87,10 @@ require ('./users/passport')(passport);
 app.get('/posts', (req, res) => {
   BlogPost.aggregate([{
     $lookup: {
-        from: "comments", // collection name in db
-        localField: "_id",
-        foreignField: "postId",
-        as: "postComments"
+        from: 'comments', // collection name in db
+        localField: '_id',
+        foreignField: 'postId',
+        as: 'postComments'
     }
 }]).then(posts => {
       res.json(posts);
