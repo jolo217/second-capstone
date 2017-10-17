@@ -51,7 +51,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
 			password: password,
 			grant_type: 'password'
 		}),
-		contentType: "application/json", dataType: 'json',
+		contentType: 'application/json', dataType: 'json',
     	success: function (response) {
     		sessionStorage.removeItem('accessToken');
     		sessionStorage.setItem('accessToken', response.token);
@@ -128,7 +128,7 @@ $('#search-button').on('click', function(event){
 });
 
 $('#js-posts').on('click', '.delete-post', function() {
-	const value = $(this).parent().parent().data("id")
+	const value = $(this).parent().parent().data('id');
 	const element = $(this).parent().parent();
 	console.log(value);
 	console.log(element);
@@ -213,9 +213,13 @@ $('#js-posts').on('click', '.post-button', function() {
 });
 
 $('#js-posts').on('click', '.delete-comment-button', function() {
-	const value = $(this).parent().data("id");
+	const value = $(this).parent().data('id');
 	const element = $(this).parent();
 	deleteComment(value, element);
+});
+
+$('.contact-submit-btn').on('click', function(event) {
+
 });
 
 // On load function

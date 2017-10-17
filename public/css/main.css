@@ -51,6 +51,7 @@ p {
 	padding-bottom: 15px;
 }
 
+
 .comment-section p {
 	text-align: left;
 	margin-bottom: 5px;
@@ -319,6 +320,10 @@ p {
 
 #search-button {
 	margin-bottom: 15px;
+}
+
+.mail-tag {
+	color: black;
 }
 
 label {
