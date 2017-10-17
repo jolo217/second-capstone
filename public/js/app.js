@@ -1,7 +1,7 @@
 // API functions
 function createPost(title, content, author, image, successCallback, errorCallback) {
   $.ajax({
-    url: '/posts',
+    url: '/api/posts',
     type: 'post',
     data: JSON.stringify({
     	author: {
@@ -21,7 +21,7 @@ function createPost(title, content, author, image, successCallback, errorCallbac
 
 function getPosts(successCallback, errorCallback) {
   $.ajax({
-    url: '/posts',
+    url: '/api/posts',
     type: 'get',
     headers: {
     	'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
@@ -33,7 +33,7 @@ function getPosts(successCallback, errorCallback) {
 
 function deletePost(id, element) {
   $.ajax({
-    url: '/posts/' + id,
+    url: '/api/posts/' + id,
     type: 'delete',
     success: function (data) {
        element.remove();
@@ -65,7 +65,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
 
 function deleteComment(id, element) {
 	 $.ajax({
-    url: '/comments/' + id,
+    url: '/api/comments/' + id,
     type: 'delete',
     success: function (data) {
        element.remove();
@@ -105,11 +105,6 @@ function resultData(data) {
 	$('#js-posts').html(outputHtml);
 }
 
-
-function displaySuccess(data) {
-	console.log('successfully posted data');
-}
-
 function displayError() {
 	$('.container').show().text('something went wrong');
 }
@@ -130,8 +125,6 @@ $('#search-button').on('click', function(event){
 $('#js-posts').on('click', '.delete-post', function() {
 	const value = $(this).parent().parent().data('id');
 	const element = $(this).parent().parent();
-	console.log(value);
-	console.log(element);
 	deletePost(value, element);
 });
 
@@ -193,7 +186,7 @@ $('#js-posts').on('click', '.post-button', function() {
 	const username = payloadData.username;
 	$.ajax({
 		type: 'POST',
-		url: '/comments',
+		url: '/api/comments',
 		dataType: 'json',
 		data: {
 			content: comment,

@@ -78,13 +78,10 @@ apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), fu
   res.send('It worked! User id is: ' + req.user._id + '.');
 });
 
-// Set url for API group routes
-app.use('/api', apiRoutes);
-
 // Bring in passport strategy we just defined
 require ('./users/passport')(passport);
 
-app.get('/posts', (req, res) => {
+apiRoutes.get('/posts', (req, res) => {
   BlogPost.aggregate([{
     $lookup: {
         from: 'comments', // collection name in db
@@ -101,7 +98,7 @@ app.get('/posts', (req, res) => {
     });
 	});
 
-app.get('/posts/:id', (req, res) => {
+apiRoutes.get('/posts/:id', (req, res) => {
   BlogPost
     .findById(req.params.id)
     .then(post => res.json(post.apiRepr()))
@@ -111,7 +108,7 @@ app.get('/posts/:id', (req, res) => {
     });
 });
 
-app.post('/posts', (req, res) => {
+apiRoutes.post('/posts', (req, res) => {
   const requiredFields = ['title', 'content', 'author', 'created', 'image']
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -139,7 +136,7 @@ app.post('/posts', (req, res) => {
 });
 
 
-app.delete('/posts/:id', (req, res) => {
+apiRoutes.delete('/posts/:id', (req, res) => {
   BlogPost
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -152,7 +149,7 @@ app.delete('/posts/:id', (req, res) => {
 });
 
 
-app.put('/posts/:id', (req, res) => {
+apiRoutes.put('/posts/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
@@ -174,7 +171,7 @@ app.put('/posts/:id', (req, res) => {
 });
 
 
-app.delete('/posts/:id', (req, res) => {
+apiRoutes.delete('/posts/:id', (req, res) => {
   BlogPosts
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -183,7 +180,7 @@ app.delete('/posts/:id', (req, res) => {
     });
 });
 
-app.post('/comments', (req, res) => {
+apiRoutes.post('/comments', (req, res) => {
    const requiredFields = ['content', 'postId']
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -207,7 +204,7 @@ app.post('/comments', (req, res) => {
     }));
 });
 
-app.delete('/comments/:id', (req, res) => {
+apiRoutes.delete('/comments/:id', (req, res) => {
   Comments
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -215,6 +212,9 @@ app.delete('/comments/:id', (req, res) => {
       res.status(204).end();
     });
 });
+
+// Set url for API group routes
+app.use('/api', apiRoutes);
 
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});
