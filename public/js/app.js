@@ -13,8 +13,13 @@ function createPost(title, content, author, image, successCallback, errorCallbac
 		image: image,
 		created: Date.now()
 	}),
+	headers: {
+    	'Authorization': sessionStorage.getItem('accessToken')
+    },
 	contentType: 'application/json', dataType: 'json',
-    success: successCallback,
+    success: function (response) {
+    	window.location.replace('http://localhost:8080/index.html');
+    },
     error: errorCallback,
   });
 }
@@ -23,9 +28,6 @@ function getPosts(successCallback, errorCallback) {
   $.ajax({
     url: '/api/posts',
     type: 'get',
-    headers: {
-    	'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
-    },
     success: successCallback,
     error: errorCallback,
   });
@@ -35,6 +37,9 @@ function deletePost(id, element) {
   $.ajax({
     url: '/api/posts/' + id,
     type: 'delete',
+    headers: {
+    	'Authorization': sessionStorage.getItem('accessToken')
+    },
     success: function (data) {
        element.remove();
     },
@@ -67,6 +72,9 @@ function deleteComment(id, element) {
 	 $.ajax({
     url: '/api/comments/' + id,
     type: 'delete',
+    headers: {
+    	'Authorization': sessionStorage.getItem('accessToken')
+    },
     success: function (data) {
        element.remove();
     },
@@ -119,7 +127,7 @@ $('#search-button').on('click', function(event){
 		lastName: $('.last-name-input').val()
 	};
 	const image = $('.image-input').val();
-	createPost(titleInput, contentInput, author, image, displaySuccess, displayError);
+	createPost(titleInput, contentInput, author, image, displayError);
 });
 
 $('#js-posts').on('click', '.delete-post', function() {
@@ -132,7 +140,7 @@ $('.login-btn').on('click', function(event) {
 	event.preventDefault();;
 	const usernameInput = $('.username-input').val();
 	const passwordInput = $('.password-input').val();
-	accountSignin(usernameInput, passwordInput, displaySuccess, displayError);
+	accountSignin(usernameInput, passwordInput, displayError);
 });
 
 $('#register-form').on('submit', function(event) {
@@ -188,6 +196,9 @@ $('#js-posts').on('click', '.post-button', function() {
 		type: 'POST',
 		url: '/api/comments',
 		dataType: 'json',
+		headers: {
+    	'Authorization': sessionStorage.getItem('accessToken')
+   		},
 		data: {
 			content: comment,
 			postId: postId,

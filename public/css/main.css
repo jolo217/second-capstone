@@ -146,6 +146,22 @@ p {
   top: 410px;
 }
 
+.contact-footer { 
+  background-color: #333;
+  clear: both;
+  position: relative;
+  z-index: 10;
+  height: 5em;
+  margin-top: -3em;
+  top: 700px;
+}	
+
+.contact-footer p {
+	padding-top: 30px;
+	color: white;
+	font-family: sans-serif;
+}
+
 .footer p {
 	padding-top: 30px;
 	color: white;

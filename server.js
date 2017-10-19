@@ -61,7 +61,7 @@ apiRoutes.post('/authenticate', function(req, res) {
       user.comparePassword(req.body.password, function(err, isMatch) {
         if (isMatch && !err) {
           // Create token if the password matched and no error was thrown
-          var token = jwt.sign({username: user.username, role: user.role}, JWT_SECRET, {
+          var token = jwt.sign({id: user._id, username: user.username, role: user.role}, JWT_SECRET, {
             expiresIn: 10080 // in seconds
           });
           res.json({ success: true, token: 'BEARER ' + token });
@@ -71,11 +71,6 @@ apiRoutes.post('/authenticate', function(req, res) {
       });
     }
   });
-});
-
-// Protect dashboard route with JWT
-apiRoutes.get('/dashboard', passport.authenticate('jwt', { session: false }), function(req, res) {
-  res.send('It worked! User id is: ' + req.user._id + '.');
 });
 
 // Bring in passport strategy we just defined
@@ -108,7 +103,11 @@ apiRoutes.get('/posts/:id', (req, res) => {
     });
 });
 
-apiRoutes.post('/posts', (req, res) => {
+apiRoutes.post('/posts', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const role = req.user.role;
+    if (role !== 'Admin') {
+      res.status(403).send();
+    }
   const requiredFields = ['title', 'content', 'author', 'created', 'image']
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -136,7 +135,11 @@ apiRoutes.post('/posts', (req, res) => {
 });
 
 
-apiRoutes.delete('/posts/:id', (req, res) => {
+apiRoutes.delete('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const role = req.user.role;
+    if (role !== 'Admin') {
+      res.status(403).send();
+    }
   BlogPost
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -149,7 +152,11 @@ apiRoutes.delete('/posts/:id', (req, res) => {
 });
 
 
-apiRoutes.put('/posts/:id', (req, res) => {
+apiRoutes.put('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const role = req.user.role;
+    if (role !== 'Admin') {
+      res.status(403).send();
+    }
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
@@ -171,7 +178,12 @@ apiRoutes.put('/posts/:id', (req, res) => {
 });
 
 
-apiRoutes.delete('/posts/:id', (req, res) => {
+apiRoutes.delete('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log(req.user);
+  const role = req.user.role;
+    if (role !== 'Admin') {
+      res.status(403).send();
+    }
   BlogPosts
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -180,7 +192,7 @@ apiRoutes.delete('/posts/:id', (req, res) => {
     });
 });
 
-apiRoutes.post('/comments', (req, res) => {
+apiRoutes.post('/comments', passport.authenticate('jwt', { session: false }), (req, res) => {
    const requiredFields = ['content', 'postId']
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -204,7 +216,11 @@ apiRoutes.post('/comments', (req, res) => {
     }));
 });
 
-apiRoutes.delete('/comments/:id', (req, res) => {
+apiRoutes.delete('/comments/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const role = req.user.role;
+    if (role !== 'Admin') {
+      res.status(403).send();
+    }
   Comments
     .findByIdAndRemove(req.params.id)
     .then(() => {
