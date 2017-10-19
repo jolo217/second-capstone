@@ -38,12 +38,11 @@ apiRoutes.post('/register', function(req, res) {
     });
 
     // Attempt to save the user
-    newUser.save(function(err) {
-      if (err) {
-        return res.status(400).json({ success: false, message: 'That username or email address already exists.'});
-      }
+    newUser.save().then(() => {
       res.json({ success: true, message: 'Successfully created new user.' });
-    });
+    }).catch(() => {
+     return res.status(400).json({ success: false, message: 'That username or email address already exists.'});
+   });
   }
 });
 
@@ -51,8 +50,7 @@ apiRoutes.post('/register', function(req, res) {
 apiRoutes.post('/authenticate', function(req, res) {
   User.findOne({
     username: req.body.username
-  }, function(err, user) {
-    if (err) throw err;
+  }).then(user => {
 
     if (!user) {
       res.status(400).json({ success: false, message: 'Authentication failed. User not found.' });
@@ -70,10 +68,12 @@ apiRoutes.post('/authenticate', function(req, res) {
         }
       });
     }
+  }).catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'something went wrong'});
   });
 });
 
-// Bring in passport strategy we just defined
 require ('./users/passport')(passport);
 
 apiRoutes.get('/posts', (req, res) => {
@@ -83,31 +83,31 @@ apiRoutes.get('/posts', (req, res) => {
         localField: '_id',
         foreignField: 'postId',
         as: 'postComments'
-    }
-}]).then(posts => {
+      }
+    }]).then(posts => {
       res.json(posts);
     })
     .catch(err => {
       console.error(err);
       res.status(500).json({error: 'something went wrong'});
     });
-	});
+  });
 
 apiRoutes.get('/posts/:id', (req, res) => {
   BlogPost
-    .findById(req.params.id)
-    .then(post => res.json(post.apiRepr()))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({error: 'something went wrong'});
-    });
+  .findById(req.params.id)
+  .then(post => res.json(post.apiRepr()))
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'something went wrong'});
+  });
 });
 
 apiRoutes.post('/posts', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
-    if (role !== 'Admin') {
-      res.status(403).send();
-    }
+  if (role !== 'Admin') {
+    res.status(403).send();
+  }
   const requiredFields = ['title', 'content', 'author', 'created', 'image']
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -119,44 +119,44 @@ apiRoutes.post('/posts', passport.authenticate('jwt', { session: false }), (req,
   }
 
   BlogPost
-    .create({
-      title: req.body.title,
-      content: req.body.content,
-      author: req.body.author,
-      created: req.body.created,
-      image: req.body.image,
-      comments: req.body.comments
-    })
-    .then(blogPost => res.status(201).json(blogPost.apiRepr()))
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({error: 'Something went wrong'});
-    });
+  .create({
+    title: req.body.title,
+    content: req.body.content,
+    author: req.body.author,
+    created: req.body.created,
+    image: req.body.image,
+    comments: req.body.comments
+  })
+  .then(blogPost => res.status(201).json(blogPost.apiRepr()))
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'Something went wrong'});
+  });
 });
 
 
 apiRoutes.delete('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
-    if (role !== 'Admin') {
-      res.status(403).send();
-    }
+  if (role !== 'Admin') {
+    res.status(403).send();
+  }
   BlogPost
-    .findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.status(204).json({message: 'success'});
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({error: 'something went wrong'});
-    });
+  .findByIdAndRemove(req.params.id)
+  .then(() => {
+    res.status(204).json({message: 'success'});
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'something went wrong'});
+  });
 });
 
 
 apiRoutes.put('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
-    if (role !== 'Admin') {
-      res.status(403).send();
-    }
+  if (role !== 'Admin') {
+    res.status(403).send();
+  }
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
@@ -172,61 +172,60 @@ apiRoutes.put('/posts/:id', passport.authenticate('jwt', { session: false }), (r
   });
 
   BlogPost
-    .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
-    .then(updatedPost => res.status(204).end())
-    .catch(err => res.status(500).json({message: 'Something went wrong'}));
+  .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+  .then(updatedPost => res.status(204).end())
+  .catch(err => res.status(500).json({message: 'Something went wrong'}));
 });
 
 
 apiRoutes.delete('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log(req.user);
   const role = req.user.role;
-    if (role !== 'Admin') {
-      res.status(403).send();
-    }
+  if (role !== 'Admin') {
+    res.status(403).send();
+  }
   BlogPosts
-    .findByIdAndRemove(req.params.id)
-    .then(() => {
-      console.log(`Deleted blog post with id \`${req.params.ID}\``);
-      res.status(204).end();
-    });
+  .findByIdAndRemove(req.params.id)
+  .then(() => {
+    console.log(`Deleted blog post with id \`${req.params.ID}\``);
+    res.status(204).end();
+  });
 });
 
 apiRoutes.post('/comments', passport.authenticate('jwt', { session: false }), (req, res) => {
-   const requiredFields = ['content', 'postId']
-  for (let i=0; i<requiredFields.length; i++) {
-    const field = requiredFields[i];
-    if (!(field in req.body)) {
-      const message = `Missing \`${field}\` in request body`
-      console.error(message);
-      return res.status(400).send(message);
-    }
+ const requiredFields = ['content', 'postId']
+ for (let i=0; i<requiredFields.length; i++) {
+  const field = requiredFields[i];
+  if (!(field in req.body)) {
+    const message = `Missing \`${field}\` in request body`
+    console.error(message);
+    return res.status(400).send(message);
   }
+}
 
-  Comments
-    .create({
-      content: req.body.content,
-      postId: mongoose.Types.ObjectId(req.body.postId),
-      username: req.body.username
-    })
-    .then(comment => res.status(201).json(comment)
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({error: 'Something went wrong'});
-    }));
+Comments
+.create({
+  content: req.body.content,
+  postId: mongoose.Types.ObjectId(req.body.postId),
+  username: req.body.username
+})
+.then(comment => res.status(201).json(comment)
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'Something went wrong'});
+  }));
 });
 
 apiRoutes.delete('/comments/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
-    if (role !== 'Admin') {
-      res.status(403).send();
-    }
+  if (role !== 'Admin') {
+    res.status(403).send();
+  }
   Comments
-    .findByIdAndRemove(req.params.id)
-    .then(() => {
-      console.log(`Deleted comments post with id \`${req.params.id}\``);
-      res.status(204).end();
-    });
+  .findByIdAndRemove(req.params.id)
+  .then(() => {
+    console.log(`Deleted comments post with id \`${req.params.id}\``);
+    res.status(204).end();
+  });
 });
 
 // Set url for API group routes
@@ -256,16 +255,16 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
 
 function closeServer() {
   return mongoose.disconnect().then(() => {
-     return new Promise((resolve, reject) => {
-       console.log('Closing server');
-       server.close(err => {
-           if (err) {
-               return reject(err);
-           }
-           resolve();
-       });
+   return new Promise((resolve, reject) => {
+     console.log('Closing server');
+     server.close(err => {
+       if (err) {
+         return reject(err);
+       }
+       resolve();
      });
-  });
+   });
+ });
 }
 
 if (require.main === module) {
