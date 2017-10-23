@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); 
 const passport = require('passport');
-const User = require('./models/user')
+const User = require('./models/user');
 const jwt = require('jsonwebtoken');
 
 const {BlogPost} = require('./models/posts');
@@ -125,7 +125,6 @@ apiRoutes.post('/posts', passport.authenticate('jwt', { session: false }), (req,
     author: req.body.author,
     created: req.body.created,
     image: req.body.image,
-    comments: req.body.comments
   })
   .then(blogPost => res.status(201).json(blogPost.apiRepr()))
   .catch(err => {
