@@ -1,0 +1,9 @@
+deploy:
+  language: node_js
+  node_js: node
+  provider: heroku
+  api_key:
+    secure: uNioOj/XDhf/JVbOxWfTGcB2oFA4Wi6ywjyDCOfdCXrxjLIWSV2zKMgP0ByaCq6jdIOlZjYvoG0O/MBOE0acjxSj0m3MXrOPHaV9GcxLUTQ6z2e2i4zLWAkG7gxXHS/HDo/s0QGXOg3S3zD4jDgae/4jepsQPfznHfMccklToTooBgQuv6Ml8/5jntimpIOx/0cFEws7+HHfVtTm4cFxDlpep1rXNaRnruOu57RYRbmppb8yk8D9dMAd9Wi7sM0RK3VuUHYN7eTbhWVlWHrPp28/kGfVoIQ+uMJS5rgf3K9wNmUtNRiCEZE3jM4WQpfKYCQtINkkXa4nZ7DXtSol3jimo4rn9lKUzXCBWECsbD5x5IOCqnq8KTBC8SaNnJHi0ot3WkjHlet18qLUlqQGpiNQQzCl1i579em+RUNGaG2oPFddT7KnGMWuTf8Ngxsg0TisIdEraf8c0WxpZB24UuHrQ7YrRxnSmYX4li0bGLxF+q9B7kwFW6XCT6NSBE+CxSJGcBAttUT6OfW05GdrUbfi+Plvf9xnXvLG9m9P/w9A7YHTfMeQ8tDCw9fpBlLkZ/ryxQVhQX3ab/u4GU87SEc5Qqxds43JOU6awtv0Ytb/l8P6mS3t6tk1Xm1bgBCnKIKDGS7H9i53IlKPNSkXyDVUwxKmER5FHm+EEPBVv7M=
+  app: fathomless-ravine-24812
+  on:
+    repo: jolo217/second-capstone
