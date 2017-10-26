@@ -191,7 +191,7 @@ $('#js-posts').on('click', '.post-button', function() {
 	const whereToRender = $(this).parent();
 	const token = sessionStorage.getItem('accessToken');
 	const payloadData = parseJwt(token);
-	const username = payloadData.username;
+	const username = payloadData.username; 
 	$.ajax({
 		type: 'POST',
 		url: '/api/comments',
