@@ -117,6 +117,12 @@ function displayError() {
 	$('.container').show().text('something went wrong');
 }
 
+function scroll() {
+	$('html, body').animate({
+    scrollTop: $(".search-results").offset().top
+}, 1000);
+}
+
 // Event Handlers
 $('#search-button').on('click', function(event){
 	event.preventDefault();
@@ -234,6 +240,7 @@ $(function(){
 	$('.comment-text-area').hide();
 	$('.post-button').hide();
 	$('.delete-comment-button').hide();
+	$('.delete-post').hide();
 	const token = sessionStorage.getItem('accessToken');
 	if (token) {
 		$('.hide-user').hide();
@@ -248,6 +255,7 @@ $(function(){
 			$('.comment-text-area').show();
 			$('.post-button').show();
 			$('.delete-comment-button').show();
+			$('.delete-post').show();
 		}
 	};
 });
