@@ -18,7 +18,7 @@ function createPost(title, content, author, image, successCallback, errorCallbac
     },
 	contentType: 'application/json', dataType: 'json',
     success: function (response) {
-    	window.location.replace('http://localhost:8080/index.html');
+    	location.href='index.html';
     },
     error: errorCallback,
   });
@@ -60,7 +60,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
     	success: function (response) {
     		sessionStorage.removeItem('accessToken');
     		sessionStorage.setItem('accessToken', response.token);
-    		window.location.replace('http://localhost:8080/index.html');
+    		location.href='index.html';
     	},
     	error: function (data) {
     		alert('error');
