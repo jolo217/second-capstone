@@ -228,10 +228,6 @@ $('#js-posts').on('click', '.delete-comment-button', function() {
 	deleteComment(value, element);
 });
 
-$('.contact-submit-btn').on('click', function(event) {
-
-});
-
 // On load function
 $(function(){
 	$('.blog-create-box').hide();
@@ -253,7 +249,6 @@ $(function(){
 			$('.blog-create-box').show();
 			$('.button-wrapper').show();
 			$('.comment-text-area').show();
-			$('.post-button').show();
 			$('.delete-comment-button').show();
 			$('.delete-post').show();
 		}
