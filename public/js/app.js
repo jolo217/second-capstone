@@ -42,6 +42,7 @@ function deletePost(id, element) {
     },
     success: function (data) {
        element.remove();
+       handlePermissions();
     },
     error: displayError,
   });
@@ -61,6 +62,7 @@ function accountSignin(username, password, successCallback, errorCallback) {
     		sessionStorage.removeItem('accessToken');
     		sessionStorage.setItem('accessToken', response.token);
     		location.href='index.html';
+    		handlePermissions();
     	},
     	error: function (data) {
     		alert('error');
@@ -77,6 +79,7 @@ function deleteComment(id, element) {
     },
     success: function (data) {
        element.remove();
+       handlePermissions();
     },
     error: displayError,
   });
@@ -111,16 +114,37 @@ function resultData(data) {
 		return post;
 	});
 	$('#js-posts').html(outputHtml);
+	handlePermissions();
 }
 
 function displayError() {
 	$('.container').show().text('something went wrong');
 }
 
-function scroll() {
-	$('html, body').animate({
-    scrollTop: $(".search-results").offset().top
-}, 1000);
+function handlePermissions() {
+	$('.blog-create-box').hide();
+	$('.show-user').hide();
+	$('.button-wrapper').hide();
+	$('.comment-text-area').hide();
+	$('.post-button').hide();
+	$('.delete-comment-button').hide();
+	$('.delete-post').hide();
+	const token = sessionStorage.getItem('accessToken');
+	if (token) {
+		$('.hide-user').hide();
+		$('.show-user').show();
+		$('.comment-text-area').show();
+		$('.post-button').show();
+		const payloadData = parseJwt(token);
+		const role = payloadData.role;
+		if (token && role === 'Admin') {
+			$('.blog-create-box').show();
+			$('.button-wrapper').show();
+			$('.comment-text-area').show();
+			$('.delete-comment-button').show();
+			$('.delete-post').show();
+		}
+	};
 }
 
 // Event Handlers
@@ -215,6 +239,7 @@ $('#js-posts').on('click', '.post-button', function() {
 			<span class="delete-comment-button">X</span></div>`;		
 			whereToRender.append(display)
 			$('.comment-text-area').val('');
+			handlePermissions();
 		},
 		error: function(data) {
 			alert('error');
@@ -230,27 +255,5 @@ $('#js-posts').on('click', '.delete-comment-button', function() {
 
 // On load function
 $(function(){
-	$('.blog-create-box').hide();
-	$('.show-user').hide();
-	$('.button-wrapper').hide();
-	$('.comment-text-area').hide();
-	$('.post-button').hide();
-	$('.delete-comment-button').hide();
-	$('.delete-post').hide();
-	const token = sessionStorage.getItem('accessToken');
-	if (token) {
-		$('.hide-user').hide();
-		$('.show-user').show();
-		$('.comment-text-area').show();
-		$('.post-button').show();
-		const payloadData = parseJwt(token);
-		const role = payloadData.role;
-		if (token && role === 'Admin') {
-			$('.blog-create-box').show();
-			$('.button-wrapper').show();
-			$('.comment-text-area').show();
-			$('.delete-comment-button').show();
-			$('.delete-post').show();
-		}
-	};
+	handlePermissions();
 });
