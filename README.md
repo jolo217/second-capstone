@@ -18,3 +18,5 @@
 * [Passport] - Authentication middleware
 * [Mocha] - for testing purposes
 * [Chai] - language for testing
+
+![front-page-screenshot](https://user-images.githubusercontent.com/26105130/32193437-427b7258-bd85-11e7-98fa-584c6bcdf186.png)
