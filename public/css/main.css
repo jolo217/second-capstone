@@ -123,6 +123,10 @@ p {
 	font-size: 150%;
 }
 
+.login-box h3 {
+	margin: 5px;
+}
+
 .blog-info p {
 	margin-left: 20px;
 }
